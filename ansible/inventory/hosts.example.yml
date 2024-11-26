@@ -1,0 +1,15 @@
+---
+all:
+  hosts:
+    microk8s-cp:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+control_plan:
+  hosts:
+    microk8s-cp:
+      ansible_host:
+  vars:
+    ansible_ssh_user:
+    ansible_port:

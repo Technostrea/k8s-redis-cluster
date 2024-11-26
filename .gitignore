@@ -1,0 +1,5 @@
+.idea/
+.idea/*
+ansible/*_env/
+ansible/py3_env/
+ansible/vault_*_pass.txt

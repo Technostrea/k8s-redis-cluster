@@ -1,0 +1,18 @@
+---
+- name: MICROK8S
+  ansible.builtin.import_playbook: tasks/install-microk8s.yml
+
+- name: KUBECTL
+  ansible.builtin.import_playbook: tasks/install-kubectl.yml
+
+- name: KUSTOMIZE
+  ansible.builtin.import_playbook: tasks/install-kustomize.yml
+
+- name: K9S
+  ansible.builtin.import_playbook: tasks/install-k9s.yml
+
+- name: CONFIG MICROK8S AND KUBECTL
+  ansible.builtin.import_playbook: tasks/conf-microk8s.yml
+
+- name: ArgoCD
+  ansible.builtin.import_playbook: tasks/install-argo-cd.yml

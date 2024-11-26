@@ -1,0 +1,33 @@
+---
+- name: Kubectl process of installation
+  hosts: control_plan
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Install kubectl for {{ ansible_facts['architecture'] }}
+      ansible.builtin.shell: |
+        cd /tmp/
+        curl -LO https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
+        sudo install kubectl /usr/local/bin/
+        kubectl completion bash | sudo tee /usr/share/bash-completion/completions/kubectl
+      when: ansible_facts['architecture'] == 'x86_64'
+      register: kubectl_installl_result
+      changed_when: "'Skipping' not in kubectl_installl_result.stdout"
+
+    - name: Install kubectl for {{ ansible_facts['architecture'] }}
+      ansible.builtin.shell: |
+        cd /tmp/
+        curl -LO https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl
+        sudo install kubectl /usr/local/bin/
+      when: ansible_facts['architecture'] == 'aarch64'
+      register: kubectl_installl_result
+      changed_when: "'Skipping' not in kubectl_installl_result.stdout"
+
+    - name: Verify kubectl installation for {{ ansible_facts['architecture'] }}
+      ansible.builtin.shell: echo $(kubectl version)
+      register: kubectl_version
+      changed_when: false
+
+    - name: Debug kubectl version for {{ ansible_facts['architecture'] }}
+      ansible.builtin.debug:
+        msg: "{{ kubectl_version.stdout }}"

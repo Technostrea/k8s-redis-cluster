@@ -1,0 +1,56 @@
+---
+- name: Microk8s process of installation
+  hosts: control_plan
+  gather_facts: true
+  become: true
+  vars_files:
+    ../group_vars/microk8s.yml
+  tasks:
+    - name: Update packages
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install utils packages
+      ansible.builtin.apt:
+        state: present
+        name:
+          - curl
+          - wget
+          - tree
+          - ipcalc
+          - bash-completion
+          - apt-transport-https
+          - ca-certificates
+          - gnupg
+
+    - name: Allow inbound traffic on cni0
+      community.general.ufw:
+        rule: allow
+        interface: cni0
+        direction: in
+      when: ansible_facts['architecture'] == 'x86_64'
+
+    - name: Allow outbound traffic on cni0
+      community.general.ufw:
+        rule: allow
+        interface: cni0
+        direction: out
+      when: ansible_facts['architecture'] == 'x86_64'
+
+    - name: Set default firewall policy to allow routed traffic
+      community.general.ufw:
+        rule: allow
+        default: allow
+      when: ansible_facts['architecture'] == 'x86_64'
+
+    - name: Make sure snapd is installed
+      ansible.builtin.package:
+        name:
+          - snapd
+      when: ansible_distribution != 'Archlinux'
+
+    - name: Install microk8s
+      community.general.snap:
+        name: microk8s
+        classic: true
+        channel: "{{ microk8s_version }}"

@@ -1,0 +1,22 @@
+---
+- name: Kustomize process of installation
+  hosts: control_plan
+  become: true
+  tasks:
+    - name: Install kustomize
+      ansible.builtin.shell: |
+        cd /tmp/
+        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+        sudo install kustomize /usr/local/bin/
+        kustomize completion bash | sudo tee /usr/share/bash-completion/completions/kustomize
+      register: kustomize_installl_result
+      changed_when: "'Skipping' not in kustomize_installl_result.stdout"
+
+    - name: Verify kustomize installation for {{ ansible_facts['architecture'] }}
+      ansible.builtin.shell: kustomize version
+      register: kustomize_version
+      changed_when: false
+
+    - name: Debug kustomize version for {{ ansible_facts['architecture'] }}
+      ansible.builtin.debug:
+        msg: "{{ kustomize_version.stdout }}"
