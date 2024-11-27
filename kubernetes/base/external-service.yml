@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: redis-svc-bridge
+  name: redis-svc-bridge
+spec:
+  externalName: redis.redis.svc.cluster.local
+  ports:
+  - name: "80"
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: redis-svc-bridge
+  type: ExternalName
+status:
+  loadBalancer: {}
