@@ -11,7 +11,7 @@ spec:
       paths:
       - backend:
           service:
-            name: redis-svc
+            name: redis
             port:
               number: 80
         path: /
