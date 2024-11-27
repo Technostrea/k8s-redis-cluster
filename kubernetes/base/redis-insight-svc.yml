@@ -3,16 +3,16 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: redis
-  name: redis
+    app: redis-insight
+  name: redis-insight
 spec:
   ports:
-  - name: "80"
-    port: 80
+  - name: "5540"
+    port: 5540
     protocol: TCP
-    targetPort: 80
+    targetPort: 5540
   selector:
-    app: redis
+    app: redis-insight
   type: ClusterIP
 status:
   loadBalancer: {}

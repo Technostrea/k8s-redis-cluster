@@ -3,24 +3,27 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    app: redis
-  name: redis
+    app: redis-insight
+  name: redis-insight
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redis
+      app: redis-insight
   strategy: {}
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: redis
+        app: redis-insight
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - image: redis/redisinsight:latest
+        name: redisinsight
         ports:
-        - containerPort: 80
+        - containerPort: 5540
+        env:
+        - name: RIPROXYPATH
+          value: "/"
         resources: {}
 status: {}

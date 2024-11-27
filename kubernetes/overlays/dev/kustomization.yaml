@@ -8,4 +8,3 @@ namespace: redis
 namePrefix: dev-
 
 patches:
-- path: deploy.yml

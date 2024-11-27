@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  creationTimestamp: null
+  labels:
+    app: redis-workers
+  name: redis-workers
+spec:
+  serviceName: redis-workers
+  replicas: 6
+  selector:
+    matchLabels:
+      app: redis-worker
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: redis-worker
+    spec:
+      containers:
+      - image: redis:7.0
+        name: redis
+        args: ["redis-server", "/redis-conf/redis.conf"]
+        volumeMounts:
+        - name: redis-config-volume
+          mountPath: /redis-conf
+          readOnly: true
+      volumes:
+      - name: redis-config-volume
+        configMap:
+          name: redis-config

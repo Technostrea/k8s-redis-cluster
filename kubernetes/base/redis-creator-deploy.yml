@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: redis-creator
+  name: redis-creator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-creator
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: redis-creator
+    spec:
+      containers:
+      - image: redis:7.0
+        name: redis
+        args: ["redis-server", "/redis-conf/redis.conf"]
+        volumeMounts:
+        - name: redis-config-volume
+          mountPath: /redis-conf
+          readOnly: true
+      volumes:
+      - name: redis-config-volume
+        configMap:
+          name: redis-config

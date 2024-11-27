@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   creationTimestamp: null
   name: redis
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
@@ -11,9 +13,9 @@ spec:
       paths:
       - backend:
           service:
-            name: redis
+            name: redis-insight
             port:
-              number: 80
+              number: 5540
         path: /
         pathType: Prefix
 status:
