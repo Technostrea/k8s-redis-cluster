@@ -4,7 +4,7 @@
   become: true
   gather_facts: true
   vars_files:
-    ../group_vars/k9s.yml
+    "../group_vars/{{ env }}/k9s.yml"
   tasks:
     - name: Download K9s for {{ ansible_facts['distribution'] }}
       ansible.builtin.get_url:

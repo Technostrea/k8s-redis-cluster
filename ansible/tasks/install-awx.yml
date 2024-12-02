@@ -1,0 +1,33 @@
+---
+- name: Awx process of installation and config
+  hosts: control_plan
+  gather_facts: true
+  vars_files:
+    "../group_vars/{{ env }}/awx.yml"
+  tasks:
+    - name: Ensure Awx directory exists
+      ansible.builtin.file:
+        path: /tmp/awx
+        state: directory
+        mode: '777'
+
+    - name: Copy Kustomization manifest
+      ansible.builtin.template:
+        src: ../templates/awx/kustomization.yaml.j2
+        dest: /tmp/awx/kustomization.yaml
+        mode: '777'
+
+    - name: Copy awx-deploy manifest
+      ansible.builtin.template:
+        src: ../templates/awx/awx-deploy.yml.j2
+        dest: /tmp/awx/awx-deploy.yml
+        mode: '777'
+
+    - name: Create Awx namespace , Awx ingress and Apply all Awx manifest
+      ansible.builtin.shell: |
+        cd /tmp/awx
+        kubectl create namespace awx --dry-run=client -o yaml > namespace.yaml
+        kubectl apply -f namespace.yaml
+        kubectl apply -k .
+      register: apply_result
+      changed_when: "'Skipping' not in apply_result.stdout"

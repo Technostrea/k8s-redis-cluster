@@ -3,7 +3,7 @@
   hosts: control_plan
   gather_facts: true
   vars_files:
-    ../group_vars/argocd.yml
+    "../group_vars/{{ env }}/argocd.yml"
   tasks:
     - name: Ensure ArgoCD directory exists on {{ ansible_env.HOME }}
       ansible.builtin.file:

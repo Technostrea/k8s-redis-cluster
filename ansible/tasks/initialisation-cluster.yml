@@ -1,0 +1,19 @@
+---
+- name: Redis cluster init
+  hosts: control_plan
+  gather_facts: true
+  vars_files:
+    "../group_vars/{{ env }}/redis.yml"
+  tasks:
+    - name: Copy redis script
+      ansible.builtin.template:
+        src: ../templates/redis/script.sh.j2
+        dest: /tmp/script.sh
+        mode: '777'
+
+    - name: Exec script
+      ansible.builtin.shell: |
+        cd /tmp
+        bash script.sh
+      register: apply_result
+      changed_when: "'Skipping' not in apply_result.stdout"

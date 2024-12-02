@@ -4,7 +4,7 @@
   gather_facts: true
   become: false
   vars_files:
-    ../group_vars/microk8s.yml
+    "../group_vars/{{ env }}/microk8s.yml"
   tasks:
     - name: Ensure .kube directory exists on {{ ansible_env.HOME }}
       ansible.builtin.file:

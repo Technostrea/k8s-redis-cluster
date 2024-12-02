@@ -16,3 +16,6 @@
 
 - name: ArgoCD
   ansible.builtin.import_playbook: tasks/install-argo-cd.yml
+
+- name: AWX
+  ansible.builtin.import_playbook: tasks/install-awx.yml

@@ -37,9 +37,19 @@ pip install -r requirements.txt
 ansible control-plan -m ping
 ```
 
-## Verificer le programme
+## Encrypter en fonction des env
+```bash
+ansible-vault encrypt inventory/dev/hosts.yml --vault-id dev@vault_pass_dev.txt
+```
+## Verifier le programme
 ```bash
 ansible-playbook main.yaml --check
+```
+## Verifier le programme en fonction de l'env
+```bash
+ansible-playbook -i inventory/hosts.yml main.yml --extra-vars "env=dev" --check
+
+ansible-playbook main.yml --extra-vars "env=dev" --vault-id dev@vault_pass_dev.txt  --check
 ```
 
 ## Lancer le programme

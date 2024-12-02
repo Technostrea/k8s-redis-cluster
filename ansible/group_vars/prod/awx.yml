@@ -1,0 +1,5 @@
+---
+awx_version: 2.12.2
+awx_admin_passwd: adminPassword
+awx_passwd: password
+awx_ing_fqdn: awx.mon-domaine

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Nom du namespace et du label pour identifier les pods Redis
+NAMESPACE="{{ namespace | default('redis') }}"           # Remplacez par le namespace approprié si nécessaire
+LABEL="{{ label | default('app=redis-worker') }}"    # Assurez-vous que ce label correspond à vos pods Redis
+REDIS_PORT=6379             # Port utilisé par Redis
+ENV="{{ env }}"                   # L'environement
+
+# Vérification que kubectl est configuré correctement
+if ! command -v kubectl &> /dev/null; then
+  echo "kubectl n'est pas installé ou n'est pas dans le PATH. Veuillez l'installer."
+  exit 1
+fi
+
+# Récupération des adresses IP des pods Redis
+echo "Récupération des adresses IP des pods Redis..."
+REDIS_NODES=$(kubectl get pods -n $NAMESPACE -l $LABEL -o jsonpath='{range .items[*]}{.status.podIP}:6379 {end}')
+if [[ -z "$REDIS_NODES" ]]; then
+  echo "Aucun pod Redis trouvé dans le namespace '$NAMESPACE' avec le label '$LABEL'."
+  exit 1
+fi
+
+echo "Adresses IP des pods Redis :"
+echo "$REDIS_NODES"
+
+# Commande redis-cli pour créer le cluster
+echo "Création du cluster Redis avec redis-cli..."
+yes "yes" | kubectl exec -it -n $NAMESPACE deployments/$ENV-redis-creator -- redis-cli --cluster create $REDIS_NODES --cluster-replicas 1
+
+# Vérification du succès
+if [[ $? -eq 0 ]]; then
+  echo "Cluster Redis créé avec succès."
+else
+  echo "Erreur lors de la création du cluster Redis."
+  exit 1
+fi

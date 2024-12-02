@@ -1,0 +1,21 @@
+---
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: awx
+spec:
+  admin_user: admin
+  admin_password_secret: {{ awx_admin_passwd }}
+
+  service_type: ClusterIP
+  service_annotations: |
+          environment: awx
+  service_labels: |
+          environment: awx
+
+  ingress_type: ingress
+  hostname: {{ awx_ing_fqdn }}
+  ingress_annotations: |
+    environment: awx
+
+  postgres_configuration_secret: awx-postgres-configuration
