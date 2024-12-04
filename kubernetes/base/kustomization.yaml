@@ -8,4 +8,6 @@ resources:
 - redis-workers-svc.yml
 - redis-insight-deploy.yml
 - redis-insight-svc.yml
+- redis-exporter-deploy.yml
+- redis-exporter-svc.yml
 - ingress.yml
