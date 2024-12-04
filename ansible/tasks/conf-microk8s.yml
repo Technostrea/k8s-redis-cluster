@@ -23,6 +23,7 @@
         sudo microk8s enable community
         sudo microk8s enable cert-manager
         sudo microk8s enable storage
+        sudo microk8s enable prometheus
         sudo microk8s enable metallb:"{{ cidr }}"
       register: microk8s_result
       changed_when: "'Skipping' not in microk8s_result.stdout"
